@@ -3,6 +3,7 @@ package net.micode.fileexplorer;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
@@ -16,10 +17,15 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView imageView;
 
+    private int orientation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        orientation=getResources().getConfiguration().orientation;
         setContentView(R.layout.activity_main);
+
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(MainActivity.this,
@@ -44,8 +50,12 @@ public class MainActivity extends AppCompatActivity {
     private void startApp(){
 
         imageView = (ImageView) findViewById(R.id.main_img);
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE){
+            imageView.setImageResource(R.drawable.main_img2);
+        }else{
+            imageView.setImageResource(R.drawable.xiaoan);
+        }
 
-        imageView.setImageResource(R.drawable.migan);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
