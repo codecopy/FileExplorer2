@@ -493,7 +493,7 @@ public class FTPServerService extends Service implements Runnable {
     private void takeWifiLock() {
         myLog.d("Taking wifi lock");
         if (wifiLock == null) {
-            WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+            WifiManager manager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             wifiLock = manager.createWifiLock("SwiFTP");
             wifiLock.setReferenceCounted(false);
         }
@@ -523,7 +523,7 @@ public class FTPServerService extends Service implements Runnable {
         if (myContext == null) {
             throw new NullPointerException("Global context is null");
         }
-        WifiManager wifiMgr = (WifiManager) myContext.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiMgr = (WifiManager) myContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (isWifiEnabled()) {
             int ipAsInt = wifiMgr.getConnectionInfo().getIpAddress();
             if (ipAsInt == 0) {
@@ -541,7 +541,7 @@ public class FTPServerService extends Service implements Runnable {
         if (myContext == null) {
             throw new NullPointerException("Global context is null");
         }
-        WifiManager wifiMgr = (WifiManager) myContext.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiMgr = (WifiManager) myContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifiMgr.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
             ConnectivityManager connManager = (ConnectivityManager) myContext
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
