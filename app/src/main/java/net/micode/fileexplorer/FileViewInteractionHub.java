@@ -31,7 +31,9 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -106,7 +108,7 @@ public class FileViewInteractionHub implements IOperationProgressListener {
         progressDialog.setMessage(msg);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
-        progressDialog.show();
+        //progressDialog.show();
     }
 
     public void sortCurrentList() {
@@ -576,19 +578,24 @@ public class FileViewInteractionHub implements IOperationProgressListener {
     private void notifyFileSystemChanged(String path) {
         if (path == null)
             return;
-        final File f = new File(path);
-        final Intent intent;
-        if (f.isDirectory()) {
-            intent = new Intent(Intent.ACTION_MEDIA_MOUNTED);
-            intent.setClassName("com.android.providers.media", "com.android.providers.media.MediaScannerReceiver");
-            intent.setData(Uri.fromFile(Environment.getExternalStorageDirectory()));
-            Log.v(LOG_TAG, "directory changed, send broadcast:" + intent.toString());
-        } else {
-            intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            intent.setData(Uri.fromFile(new File(path)));
-            Log.v(LOG_TAG, "file changed, send broadcast:" + intent.toString());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 判断SDK版本是不是4.4或者高于4.4
+            String[] paths = new String[]{Environment.getExternalStorageDirectory().toString()};
+            MediaScannerConnection.scanFile(mContext, paths, null, null);
+        }else {
+            final File f = new File(path);
+            final Intent intent;
+            if (f.isDirectory()) {
+                intent = new Intent(Intent.ACTION_MEDIA_MOUNTED);
+                intent.setClassName("com.android.providers.media", "com.android.providers.media.MediaScannerReceiver");
+                intent.setData(Uri.fromFile(Environment.getExternalStorageDirectory()));
+                Log.v(LOG_TAG, "directory changed, send broadcast:" + intent.toString());
+            } else {
+                intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                intent.setData(IntentBuilder.getUriForFile(mContext, f));
+                Log.v(LOG_TAG, "file changed, send broadcast:" + intent.toString());
+            }
+            mContext.sendBroadcast(intent);
         }
-        mContext.sendBroadcast(intent);
     }
 
     public void onOperationDelete() {

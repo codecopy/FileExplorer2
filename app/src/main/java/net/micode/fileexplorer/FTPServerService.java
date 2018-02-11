@@ -264,7 +264,7 @@ public class FTPServerService extends Service implements Runnable {
         Intent notificationIntent = new Intent(this, FileExplorerTabActivity.class);
         notificationIntent.putExtra(GlobalConsts.INTENT_EXTRA_TAB, 2);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        Notification notification = new NotificationCompat.Builder(getApplicationContext())
+        Notification notification = new NotificationCompat.Builder(getApplicationContext(), null)
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
                 .setSmallIcon(icon)

@@ -133,7 +133,7 @@ public class IntentBuilder {
         return mimeType != null ? mimeType : "*/*";
     }
 
-    private static Uri getUriForFile(Context context, File file) {
+    public static Uri getUriForFile(Context context, File file) {
         if (context == null || file == null) {
             throw new NullPointerException();
         }
