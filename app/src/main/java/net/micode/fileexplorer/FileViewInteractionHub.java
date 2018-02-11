@@ -108,7 +108,7 @@ public class FileViewInteractionHub implements IOperationProgressListener {
         progressDialog.setMessage(msg);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
-        //progressDialog.show();
+        progressDialog.show();
     }
 
     public void sortCurrentList() {
